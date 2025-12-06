@@ -7,25 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Claim extends Model
+class Batch extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'insurer_id',
         'provider_name',
-        'encounter_date',
-        'submission_date',
-        'priority_level',
-        'specialty',
+        'batch_date',
+        'identifier',
+        'claim_count',
         'total_amount',
-        'batch_id',
+        'estimated_cost',
+        'processed',
     ];
 
     protected $casts = [
-        'encounter_date' => 'date',
-        'submission_date' => 'date',
+        'batch_date' => 'date',
         'total_amount' => 'decimal:2',
+        'estimated_cost' => 'decimal:2',
+        'processed' => 'boolean',
     ];
 
     public function insurer(): BelongsTo
@@ -33,13 +34,8 @@ class Claim extends Model
         return $this->belongsTo(Insurer::class);
     }
 
-    public function batch(): BelongsTo
+    public function claims(): HasMany
     {
-        return $this->belongsTo(Batch::class);
+        return $this->hasMany(Claim::class);
     }
-
-    public function items(): HasMany
-    {
-        return $this->hasMany(ClaimItem::class);
-    }
-} 
+}
